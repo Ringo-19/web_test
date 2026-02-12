@@ -1,126 +1,339 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Stripes Lawn Care provides reliable lawn mowing, edging, seasonal cleanup, and premium curb appeal services." />
-  <title>Stripes Lawn Care | Reliable Lawn Service</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stripes Lawn Care — Professional Lawn & Landscaping</title>
+  <meta name="description" content="Stripes Lawn Care: mowing, edging, landscaping, fertilization, and seasonal services. Free estimates and dependable service." />
+  <!-- Tailwind CDN for quick prototyping -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* --- Custom styles & animations --- */
+    :root{--green-1:#16a34a;--green-2:#10b981;--accent:linear-gradient(90deg,var(--green-1),var(--green-2));}
+
+    body{background:linear-gradient(180deg,#f8fafc,white 20%);} /* subtle base */
+
+    /* Hero background and parallax layers */
+    .hero {
+      position:relative; overflow:hidden;
+      min-height:66vh;
+      display:flex; align-items:center;
+      background:linear-gradient(180deg, rgba(6,95,70,0.06), rgba(16,185,129,0.02));
+    }
+    .hero .bg-img { position:absolute; inset:0; background-image:url('images/hero.jpg'); background-size:cover; background-position:center; transform:scale(1.06); filter:brightness(.55); transition:transform 12s linear; }
+    .hero:hover .bg-img{ transform:scale(1.1) translateY(-6px); }
+
+    /* animated stripe accent */
+    .stripe-accent{
+      background:var(--accent);
+      background-size:200% 100%;
+      animation:shift 6s linear infinite;
+      display:inline-block;
+    }
+    @keyframes shift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+    /* floating leaf elements */
+    .float-leaf{position:absolute; opacity:.85; filter:drop-shadow(0 8px 18px rgba(2,6,23,0.12));}
+    @keyframes floaty{0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(6deg)}100%{transform:translateY(0) rotate(0deg)}}
+    .leaf-1{left:6%; top:14%; animation:floaty 6s ease-in-out infinite; width:90px}
+    .leaf-2{right:8%; top:22%; animation:floaty 7s ease-in-out .6s infinite; width:68px}
+    .leaf-3{left:calc(50% - 40px); bottom:6%; animation:floaty 9s ease-in-out .2s infinite; width:56px}
+
+    /* service cards hover */
+    .card{transition:transform .32s cubic-bezier(.2,.9,.2,1), box-shadow .32s; transform-origin:center}
+    .card:hover{transform:translateY(-8px) scale(1.02); box-shadow:0 24px 48px rgba(2,6,23,0.12)}
+    .card:active{transform:translateY(-4px) scale(.998)}
+
+    /* subtle icon pop on hover */
+    .icon-wrap svg{transition:transform .28s ease, color .28s}
+    .card:hover .icon-wrap svg{transform:rotate(-6deg) scale(1.06)}
+
+    /* gallery hover */
+    .gallery-item{overflow:hidden; border-radius:.75rem}
+    .gallery-item img{transition:transform .6s cubic-bezier(.2,.9,.2,1), filter .6s}
+    .gallery-item:hover img{transform:scale(1.12) rotate(.5deg); filter:brightness(.96)}
+
+    /* animated CTA button */
+    .cta-anim{position:relative; overflow:hidden}
+    .cta-anim::before{content:''; position:absolute; inset:0; background:linear-gradient(120deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); mix-blend-mode:overlay; pointer-events:none;}
+    .btn-glow{box-shadow:0 6px 30px rgba(16,185,129,0.14); transition:transform .18s ease, box-shadow .18s}
+    .btn-glow:hover{transform:translateY(-3px); box-shadow:0 18px 46px rgba(16,185,129,0.18)}
+
+    /* scroll reveal */
+    .reveal{opacity:0; transform:translateY(18px) scale(.995); transition:all .7s cubic-bezier(.2,.9,.2,1)}
+    .reveal.visible{opacity:1; transform:none}
+
+    /* tiny animated underline for links */
+    a.underline-fancy{position:relative}
+    a.underline-fancy::after{content:''; position:absolute; left:0; bottom:-2px; height:3px; width:0; background:var(--green-1); transition:width .28s}
+    a.underline-fancy:hover::after{width:100%}
+
+    /* footer wave */
+    .wave{display:block}
+
+    @media (prefers-reduced-motion:reduce){
+      .hero .bg-img, .leaf-1, .leaf-2, .leaf-3, .stripe-accent, .gallery-item img { animation: none !important; transition:none !important}
+    }
+  </style>
 </head>
-<body>
-  <div class="background-glow" aria-hidden="true"></div>
-
-  <header class="site-header" id="top">
-    <nav class="nav container">
-      <a href="#top" class="brand">
-        <img src="Stripes_Logo.png" alt="Stripes Lawn Care logo" class="brand-logo" />
-        <span>Stripes Lawn Care</span>
+<body class="antialiased text-slate-800">
+  <header class="bg-white sticky top-0 z-50 backdrop-blur-sm/5 shadow-sm">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3">
+        <img src="Stripes_Logo.png" alt="Stripes Logo" class="h-12 w-auto" />
+        <span class="font-bold text-xl">Stripes Lawn Care</span>
       </a>
-      <button class="menu-toggle" aria-expanded="false" aria-label="Toggle navigation menu">☰</button>
-      <ul class="nav-links">
-        <li><a href="#services">Services</a></li>
-        <li><a href="#work">Gallery</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-
-    <section class="hero container reveal">
-      <div class="hero-copy">
-        <p class="eyebrow">Proudly serving local neighborhoods</p>
-        <h1>Clean stripes, crisp edges, and lawns your neighbors notice.</h1>
-        <p class="hero-text">Stripes Lawn Care delivers dependable weekly and bi-weekly service with professional results. We keep your property looking sharp all season long.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#contact">Get a free estimate</a>
-          <a class="btn btn-secondary" href="#work">See our work</a>
-        </div>
-      </div>
-      <div class="hero-card">
-        <img src="https://images.unsplash.com/photo-1592415486689-125cbbfcbee2?auto=format&fit=crop&w=1100&q=80" alt="Freshly mowed lawn with visible striping pattern" />
-      </div>
-    </section>
+      <nav class="hidden md:flex gap-6 items-center text-sm">
+        <a href="#services" class="hover:text-green-600 underline-fancy">Services</a>
+        <a href="#about" class="hover:text-green-600 underline-fancy">About</a>
+        <a href="#gallery" class="hover:text-green-600 underline-fancy">Gallery</a>
+        <a href="#contact" class="px-4 py-2 rounded-md stripe-accent text-white shadow btn-glow">Get Estimate</a>
+      </nav>
+      <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+    <div id="mobile-menu" class="md:hidden hidden px-6 pb-4">
+      <a href="#services" class="block py-2">Services</a>
+      <a href="#about" class="block py-2">About</a>
+      <a href="#gallery" class="block py-2">Gallery</a>
+      <a href="#contact" class="block py-2">Get Estimate</a>
+    </div>
   </header>
 
   <main>
-    <section id="services" class="section container">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Our services</p>
-        <h2>Simple, reliable lawn care that keeps your property looking its best.</h2>
+    <!-- Hero with animated background and floating leaves -->
+    <section class="hero" aria-label="Hero">
+      <div class="bg-img" aria-hidden="true"></div>
+      <!-- decorative floating leaves (SVG placeholders) -->
+      <svg class="float-leaf leaf-1" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="url(#g)" d="M32 2c7 1 20 8 27 24-10 4-23 12-27 36-6-22-21-30-27-36C12 10 25 3 32 2z"/></svg>
+      <svg class="float-leaf leaf-2" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#10b981" d="M12 10c5 6 18 15 30 8 0 10-2 20-12 28-6-10-18-18-18-36z"/></svg>
+      <svg class="float-leaf leaf-3" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#34d399" d="M20 4c6 8 16 18 28 22-6 10-12 18-26 30-6-16-12-36-2-52z"/></svg>
+
+      <div class="max-w-6xl mx-auto px-6 py-16">
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 max-w-2xl card reveal">
+          <h1 class="text-3xl md:text-4xl font-extrabold">Beautiful lawns. Reliable service.</h1>
+          <p class="mt-3 text-slate-700">Local, dependable lawn care and landscaping — seasonal maintenance, one-time cleanups, and custom yard makeovers.</p>
+          <div class="mt-6 flex gap-3">
+            <a href="#contact" class="px-5 py-3 rounded-md stripe-accent text-white font-medium cta-anim btn-glow">Request a Free Estimate</a>
+            <a href="#services" class="px-5 py-3 rounded-md border border-slate-200 text-slate-700 hover:translate-y-[-2px] transition">View Services</a>
+          </div>
+        </div>
       </div>
-      <div class="grid services-grid">
-        <article class="card reveal">
-          <h3>Mowing & Striping</h3>
-          <p>Consistent cut heights and clean mowing patterns that make your yard stand out from the street.</p>
+    </section>
+
+    <!-- Services with icon animation and hover effects -->
+    <section id="services" class="max-w-6xl mx-auto px-6 py-16">
+      <h2 class="text-2xl font-bold reveal">Our Services</h2>
+      <p class="text-slate-600 mt-2 reveal">Comprehensive care for residential and commercial properties.</p>
+
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- card example with icon pop -->
+        <article class="p-6 rounded-lg card reveal">
+          <div class="flex items-start gap-4">
+            <div class="icon-wrap p-3 rounded-md bg-white/60 shadow-sm">
+              <svg class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 008 0M3 15v-6a4 4 0 014-4h6a4 4 0 014 4v6"/></svg>
+            </div>
+            <div>
+              <h3 class="font-semibold">Mowing & Edging</h3>
+              <p class="text-slate-600 text-sm mt-1">Regular mowing, clean edges, and grass clippings removed or mulched.</p>
+            </div>
+          </div>
         </article>
-        <article class="card reveal">
-          <h3>Edging & Trimming</h3>
-          <p>Neat edges along driveways, sidewalks, and flower beds for a polished curb appeal finish.</p>
+
+        <article class="p-6 rounded-lg card reveal">
+          <div class="flex items-start gap-4">
+            <div class="icon-wrap p-3 rounded-md bg-white/60 shadow-sm">
+              <svg class="h-10 w-10 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12H4"/></svg>
+            </div>
+            <div>
+              <h3 class="font-semibold">Fertilization & Weed Control</h3>
+              <p class="text-slate-600 text-sm mt-1">Seasonal fertilization and targeted weed control plans to keep turf healthy.</p>
+            </div>
+          </div>
         </article>
-        <article class="card reveal">
-          <h3>Seasonal Cleanup</h3>
-          <p>Leaf removal and yard refreshes to keep your property clean and healthy through every season.</p>
+
+        <article class="p-6 rounded-lg card reveal">
+          <div class="flex items-start gap-4">
+            <div class="icon-wrap p-3 rounded-md bg-white/60 shadow-sm">
+              <svg class="h-10 w-10 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7h18M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7"/></svg>
+            </div>
+            <div>
+              <h3 class="font-semibold">Landscaping & Cleanups</h3>
+              <p class="text-slate-600 text-sm mt-1">Planting, mulching, pruning, and spring/fall cleanups to refresh your yard.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="p-6 rounded-lg card reveal">
+          <div class="flex items-start gap-4">
+            <div class="icon-wrap p-3 rounded-md bg-white/60 shadow-sm">
+              <svg class="h-10 w-10 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2v20"/></svg>
+            </div>
+            <div>
+              <h3 class="font-semibold">Irrigation & Drainage</h3>
+              <p class="text-slate-600 text-sm mt-1">Irrigation checks, minor repairs and drainage improvements to protect your lawn.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="p-6 rounded-lg card reveal">
+          <div class="flex items-start gap-4">
+            <div class="icon-wrap p-3 rounded-md bg-white/60 shadow-sm">
+              <svg class="h-10 w-10 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c1.657 0 3-1.567 3-3.5S13.657 1 12 1 9 2.567 9 4.5 10.343 8 12 8z"/></svg>
+            </div>
+            <div>
+              <h3 class="font-semibold">Seasonal Services</h3>
+              <p class="text-slate-600 text-sm mt-1">Leaf removal, snow clearing (where available), and seasonal property prep.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="p-6 rounded-lg card reveal">
+          <div class="flex items-start gap-4">
+            <div class="icon-wrap p-3 rounded-md bg-white/60 shadow-sm">
+              <svg class="h-10 w-10 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+            </div>
+            <div>
+              <h3 class="font-semibold">Custom Projects</h3>
+              <p class="text-slate-600 text-sm mt-1">Hardscaping prep, small retaining walls, and landscape design consultation.</p>
+            </div>
+          </div>
         </article>
       </div>
     </section>
 
-    <section id="work" class="section container">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Recent results</p>
-        <h2>Replace these placeholders with photos of your own lawns and projects.</h2>
-      </div>
-      <div class="grid portfolio-grid">
-        <figure class="portfolio-item reveal">
-          <img src="https://images.unsplash.com/photo-1560743173-567a3b5658b1?auto=format&fit=crop&w=900&q=80" alt="Trim and healthy suburban lawn" />
-          <figcaption>Weekly maintenance lawn</figcaption>
-        </figure>
-        <figure class="portfolio-item reveal">
-          <img src="https://images.unsplash.com/photo-1622473590773-f588134b6ce7?auto=format&fit=crop&w=900&q=80" alt="Worker edging along driveway" />
-          <figcaption>Detailed edging and cleanup</figcaption>
-        </figure>
-        <figure class="portfolio-item reveal">
-          <img src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=900&q=80" alt="Lawn care equipment on grass" />
-          <figcaption>Professional equipment and care</figcaption>
-        </figure>
+    <!-- About -->
+    <section id="about" class="bg-slate-50 py-12">
+      <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
+        <div class="reveal">
+          <h2 class="text-2xl font-bold">About Stripes Lawn Care</h2>
+          <p class="mt-3 text-slate-600">Family-owned and locally operated, we pride ourselves on reliable scheduling, respectful crews, and clean results. We work with homeowners and local businesses to keep properties looking their best.</p>
+          <ul class="mt-4 space-y-2 text-slate-700">
+            <li>✅ Licensed & insured</li>
+            <li>✅ Free estimates</li>
+            <li>✅ Eco-friendly product options</li>
+          </ul>
+        </div>
+        <div class="reveal">
+          <img src="images/about.jpg" alt="About image" class="rounded-lg w-full object-cover h-64" />
+        </div>
       </div>
     </section>
 
-    <section id="about" class="section container about reveal">
-      <div>
-        <p class="eyebrow">Why Stripes Lawn Care</p>
-        <h2>Friendly local service, dependable scheduling, and quality you can see.</h2>
+    <!-- Gallery with hover zoom and subtle staggered reveal -->
+    <section id="gallery" class="max-w-6xl mx-auto px-6 py-12">
+      <h2 class="text-2xl font-bold reveal">Gallery</h2>
+      <p class="text-slate-600 mt-2 reveal">Recent jobs — replace these with your photos in the <code>images/</code> folder.</p>
+      <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="gallery-item reveal"><img src="images/service1.jpg" alt="service" class="rounded-lg object-cover h-40 w-full" /></div>
+        <div class="gallery-item reveal" style="transition-delay:.08s"><img src="images/service2.jpg" alt="service" class="rounded-lg object-cover h-40 w-full" /></div>
+        <div class="gallery-item reveal" style="transition-delay:.16s"><img src="images/service3.jpg" alt="service" class="rounded-lg object-cover h-40 w-full" /></div>
+        <div class="gallery-item reveal" style="transition-delay:.24s"><img src="images/service4.jpg" alt="service" class="rounded-lg object-cover h-40 w-full" /></div>
       </div>
-      <p>We treat every yard like it’s our own. With clear communication, consistent arrival windows, and attention to detail, we help homeowners keep their lawns thick, tidy, and healthy.</p>
     </section>
 
-    <section id="contact" class="section container contact reveal">
-      <img src="Stripes_Logo.png" alt="Stripes Lawn Care logo" class="contact-logo" />
-      <p class="eyebrow">Request service</p>
-      <h2>Ready for a cleaner, greener lawn?</h2>
-      <p>Email us today to schedule your free quote and first cut.</p>
-      <a class="btn btn-primary" href="mailto:info@stripeslawncare.com">info@stripeslawncare.com</a>
+    <!-- Contact -->
+    <section id="contact" class="bg-green-50 py-12">
+      <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-start">
+        <div class="reveal">
+          <h2 class="text-2xl font-bold">Get a Free Estimate</h2>
+          <p class="mt-3 text-slate-700">Fill out the form and we'll get back to you within 24–48 hours.</p>
+
+          <form id="contact-form" class="mt-6 space-y-4">
+            <div>
+              <label class="block text-sm text-slate-700">Full name</label>
+              <input type="text" name="name" required class="mt-1 w-full rounded-md border px-3 py-2" placeholder="Jane Doe" />
+            </div>
+
+            <div>
+              <label class="block text-sm text-slate-700">Email</label>
+              <input type="email" name="email" required class="mt-1 w-full rounded-md border px-3 py-2" placeholder="you@example.com" />
+            </div>
+
+            <div>
+              <label class="block text-sm text-slate-700">Phone</label>
+              <input type="tel" name="phone" class="mt-1 w-full rounded-md border px-3 py-2" placeholder="(555) 555-5555" />
+            </div>
+
+            <div>
+              <label class="block text-sm text-slate-700">Message / service details</label>
+              <textarea name="message" rows="4" class="mt-1 w-full rounded-md border px-3 py-2" placeholder="Tell us about your property and what you'd like done"></textarea>
+            </div>
+
+            <div>
+              <!-- NOTE: Replace the action below with your form endpoint (Formspree, Netlify Forms, etc.) -->
+              <button type="submit" class="px-5 py-3 rounded-md stripe-accent text-white font-medium cta-anim btn-glow">Send Request</button>
+              <p id="form-status" class="text-sm mt-2 text-slate-600"></p>
+            </div>
+          </form>
+        </div>
+
+        <aside class="space-y-4 reveal">
+          <div class="bg-white p-4 rounded-lg card">
+            <h3 class="font-semibold">Contact</h3>
+            <p class="text-slate-600 mt-2">Phone: <a href="tel:+15555555555" id="phone-link">(555) 555-5555</a></p>
+            <p class="text-slate-600">Email: <a href="mailto:info@example.com" id="email-link">info@example.com</a></p>
+            <p class="text-slate-600 mt-2">Serving your local area — customizable recurring maintenance plans available.</p>
+          </div>
+
+          <div class="bg-white p-4 rounded-lg card">
+            <h3 class="font-semibold">Business Hours</h3>
+            <p class="text-slate-600 mt-2">Mon – Sat: 8am – 6pm<br />Sun: Closed</p>
+          </div>
+        </aside>
+      </div>
     </section>
 
-    <section class="section container files-guide reveal" id="files-guide">
-      <div class="section-heading">
-        <p class="eyebrow">Where to place your files</p>
-        <h2>Drop your real images into these paths before deploying to GitHub Pages.</h2>
-      </div>
-      <ul>
-        <li><strong>Logo:</strong> Keep <code>Stripes_Logo.png</code> in the repo root next to <code>index.html</code>.</li>
-        <li><strong>Backgrounds:</strong> Put custom background files in <code>assets/images/backgrounds/</code>.</li>
-        <li><strong>Gallery photos:</strong> Put project photos in <code>assets/images/gallery/</code>.</li>
-      </ul>
-      <p>Then update the corresponding <code>src="..."</code> paths in <code>index.html</code> to point to your files.</p>
-    </section>
   </main>
 
-  <footer class="site-footer">
-    <p>© <span id="year"></span> Stripes Lawn Care. Clean cuts. Clear communication.</p>
+  <footer class="bg-white border-t mt-8">
+    <div class="max-w-6xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <img src="Stripes_Logo.png" alt="Logo" class="h-10" />
+        <div>
+          <p class="text-sm">© <span id="year"></span> Stripes Lawn Care. All rights reserved.</p>
+        </div>
+      </div>
+      <nav class="text-sm">
+        <a href="#privacy" class="mr-4">Privacy</a>
+        <a href="#terms">Terms</a>
+      </nav>
+    </div>
+    <!-- decorative wave -->
+    <svg class="wave" viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true"><path d="M0,32 C180,96 360,0 720,40 C1080,80 1260,12 1440,48 L1440 80 L0 80 Z" fill="#ecfdf5"/></svg>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    // small interactive bits
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+    // Simple form handler: prevents actual submit and shows a friendly message.
+    document.getElementById('contact-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      const status = document.getElementById('form-status');
+      status.textContent = 'Thanks! Your request was captured locally — replace this handler with a real form endpoint.';
+      status.classList.add('text-green-700');
+    });
+
+    // Scroll reveal using IntersectionObserver
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){ entry.target.classList.add('visible'); io.unobserve(entry.target); }
+      })
+    },{threshold:.12});
+    reveals.forEach(r=>io.observe(r));
+
+    // Respect prefers-reduced-motion
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){
+      document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
+    }
+  </script>
 </body>
 </html>
