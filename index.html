@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -25,7 +24,7 @@
     }
     
     body{
-      background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+      background: linear-gradient(135deg, #0d1f0f 0%, #0a1810 50%, #0c1a0e 100%);
       color: var(--text-primary);
     }
 
@@ -36,6 +35,7 @@
       min-height:90vh; 
       display:flex; 
       align-items:center;
+      background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
     }
 
     /* Background image with modern overlay */
@@ -287,7 +287,7 @@
       margin-top:8px;
     }
 
-    /* REVIEWS - modern slider with repositioned arrows (scroll-snap approach) */
+    /* REVIEWS - modern slider showing one at a time */
     .reviews-wrap{ 
       max-width:1000px; 
       margin:0 auto; 
@@ -307,11 +307,15 @@
       gap:1rem;
       transition:transform .5s cubic-bezier(.2,.9,.2,1); 
       will-change:transform;
-      overflow-x: auto;
+      overflow: hidden;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       border-radius: 16px;
       padding-bottom: 6px;
+      scrollbar-width: none; /* Firefox */
+    }
+    .reviews-track::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Edge */
     }
     .review-card{ 
       flex:0 0 100%; 
@@ -321,13 +325,7 @@
       box-shadow:0 10px 40px rgba(0,0,0,0.3);
       border: 1px solid rgba(255,255,255,0.05);
       scroll-snap-align:start;
-      min-width: 80%;
-    }
-    @media (min-width: 640px) {
-      .review-card { min-width: 48%; flex: 0 0 48%; }
-    }
-    @media (min-width: 1100px) {
-      .review-card { min-width: 32%; flex: 0 0 32%; }
+      min-width: 100%;
     }
 
     .review-stars{ 
@@ -639,39 +637,41 @@
     </section>
 
     <!-- REVIEWS SECTION -->
-    <section id="reviews" class="max-w-6xl mx-auto px-6 py-16 reveal">
-      <h2 class="text-3xl font-bold mb-4 text-white">Customer Reviews</h2>
-      <p class="text-gray-400 mb-8">What our customers are saying — real reviews from homeowners in Stow and nearby.</p>
+    <section id="reviews" class="py-16 reveal">
+      <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl font-bold mb-4 text-white">Customer Reviews</h2>
+        <p class="text-gray-400 mb-8">What our customers are saying — real reviews from homeowners in Stow and nearby.</p>
 
-      <div class="reviews-wrap">
-        <div class="reviews-track" id="reviews-track" tabindex="0" aria-label="Customer reviews">
-          <div class="review-card">
-            <div class="review-stars">★★★★★</div>
-            <p class="text-gray-300 text-lg leading-relaxed">Stripes Lawn Care did an amazing job with our yard. Fast, friendly, and the lawn looks brand new. Highly recommend!</p>
-            <p class="text-sm text-gray-500 mt-4">— Jamie R., Stow, OH</p>
+        <div class="reviews-wrap">
+          <div class="reviews-track" id="reviews-track" tabindex="0" aria-label="Customer reviews">
+            <div class="review-card">
+              <div class="review-stars">★★★★★</div>
+              <p class="text-gray-300 text-lg leading-relaxed">Stripes Lawn Care did an amazing job with our yard. Fast, friendly, and the lawn looks brand new. Highly recommend!</p>
+              <p class="text-sm text-gray-500 mt-4">— Jamie R., Stow, OH</p>
+            </div>
+            <div class="review-card">
+              <div class="review-stars">★★★★★</div>
+              <p class="text-gray-300 text-lg leading-relaxed">Reliable and professional. Showed up on schedule and the crew was respectful. Great value for the quality.</p>
+              <p class="text-sm text-gray-500 mt-4">— Marcus P., Hudson, OH</p>
+            </div>
+            <div class="review-card">
+              <div class="review-stars">★★★★★</div>
+              <p class="text-gray-300 text-lg leading-relaxed">My landscaping project turned out even better than I imagined. The team had great suggestions and a flawless cleanup.</p>
+              <p class="text-sm text-gray-500 mt-4">— Linda K., Stow, OH</p>
+            </div>
           </div>
-          <div class="review-card">
-            <div class="review-stars">★★★★★</div>
-            <p class="text-gray-300 text-lg leading-relaxed">Reliable and professional. Showed up on schedule and the crew was respectful. Great value for the quality.</p>
-            <p class="text-sm text-gray-500 mt-4">— Marcus P., Hudson, OH</p>
+
+          <div class="reviews-controls" aria-hidden="true">
+            <button id="rev-prev" class="icon-btn" aria-label="Previous review">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button id="rev-next" class="icon-btn" aria-label="Next review">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+            </button>
           </div>
-          <div class="review-card">
-            <div class="review-stars">★★★★★</div>
-            <p class="text-gray-300 text-lg leading-relaxed">My landscaping project turned out even better than I imagined. The team had great suggestions and a flawless cleanup.</p>
-            <p class="text-sm text-gray-500 mt-4">— Linda K., Stow, OH</p>
-          </div>
+
+          <div class="review-dots" id="review-dots" aria-hidden="true"></div>
         </div>
-
-        <div class="reviews-controls" aria-hidden="true">
-          <button id="rev-prev" class="icon-btn" aria-label="Previous review">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
-          </button>
-          <button id="rev-next" class="icon-btn" aria-label="Next review">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
-          </button>
-        </div>
-
-        <div class="review-dots" id="review-dots" aria-hidden="true"></div>
       </div>
     </section>
 
@@ -959,7 +959,7 @@
       });
     })();
 
-    // REVIEWS slider (scroll-snap + paged controls)
+    // REVIEWS slider - now showing one review at a time
     (function(){
       const track = document.getElementById('reviews-track');
       const cards = Array.from(track.querySelectorAll('.review-card'));
@@ -969,26 +969,9 @@
       let page = 0;
       let autoplay;
 
-      function getGapSize(){
-        const s = getComputedStyle(track);
-        const gap = parseFloat(s.gap || 0);
-        return isNaN(gap) ? 0 : gap;
-      }
-
-      function getVisibleCount(){
-        if(!cards.length) return 1;
-        const gap = getGapSize();
-        const cardRect = cards[0].getBoundingClientRect();
-        const cardWidth = cardRect.width + gap;
-        const visible = Math.max(1, Math.floor(track.clientWidth / cardWidth));
-        return visible;
-      }
-
       function renderDots(){
         dotsWrap.innerHTML = '';
-        const visible = getVisibleCount();
-        const pages = Math.max(1, Math.ceil(cards.length / visible));
-        for(let i=0;i<pages;i++){
+        for(let i=0; i<cards.length; i++){
           const d = document.createElement('div');
           d.className = 'review-dot' + (i===0 ? ' active' : '');
           d.dataset.i = i;
@@ -998,9 +981,7 @@
       }
 
       function goToPage(p){
-        const visible = getVisibleCount();
-        const pages = Math.max(1, Math.ceil(cards.length / visible));
-        page = Math.max(0, Math.min(p, pages - 1));
+        page = Math.max(0, Math.min(p, cards.length - 1));
         const scrollLeft = page * track.clientWidth;
         track.scrollTo({ left: scrollLeft, behavior: 'smooth' });
         updateDots();
@@ -1010,17 +991,21 @@
         Array.from(dotsWrap.children).forEach((d,i)=> d.classList.toggle('active', i===page));
       }
 
-      prev.addEventListener('click', ()=> goToPage(page - 1));
-      next.addEventListener('click', ()=> goToPage(page + 1));
+      prev.addEventListener('click', ()=> {
+        if(page > 0) goToPage(page - 1);
+        else goToPage(cards.length - 1); // wrap to last
+      });
+      
+      next.addEventListener('click', ()=> {
+        if(page < cards.length - 1) goToPage(page + 1);
+        else goToPage(0); // wrap to first
+      });
 
       // reflect scroll position -> page
-      let lastKnown = 0;
       function onScroll(){
-        const v = getVisibleCount();
-        const pages = Math.max(1, Math.ceil(cards.length / v));
         const newPage = Math.round(track.scrollLeft / track.clientWidth);
         if(newPage !== page){
-          page = Math.max(0, Math.min(newPage, pages-1));
+          page = Math.max(0, Math.min(newPage, cards.length-1));
           updateDots();
         }
       }
@@ -1030,7 +1015,10 @@
       // autoplay
       function startAutoplay(){
         if(autoplay) clearInterval(autoplay);
-        autoplay = setInterval(()=> goToPage(page + 1), 6000);
+        autoplay = setInterval(()=> {
+          if(page < cards.length - 1) goToPage(page + 1);
+          else goToPage(0);
+        }, 6000);
       }
       track.addEventListener('mouseenter', ()=> clearInterval(autoplay));
       track.addEventListener('mouseleave', ()=> startAutoplay());
