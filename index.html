@@ -4,489 +4,382 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Stripes Lawn Care — Professional Lawn & Landscaping</title>
-  <meta name="description" content="Stripes Lawn Care: mowing, edging, landscaping, fertilization, and seasonal services. Free estimates and dependable service." />
+  <meta name="description" content="Stripes Lawn Care: mowing, edging, landscaping, fertilization, and seasonal services in Stow, OH." />
   <!-- Tailwind CDN for quick prototyping -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* smoother site-wide scroll for modern browsers */
+    /* ----------------------
+       THEME COLORS (grey base)
+       ---------------------- */
+    :root{
+      --bg-100: #f3f4f6; /* page base */
+      --bg-200: #e6e7e9;
+      --muted: #9aa0a6; /* muted text */
+      --text: #0f1724;
+      --accent: #10b981; /* keep green as CTA */
+      --card: #ffffff;
+    }
+
     html { scroll-behavior: smooth; }
+    body{font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background: linear-gradient(180deg,var(--bg-100), #ffffff 45%); color:var(--text);}
 
-    :root{--green-1:#16a34a;--green-2:#10b981;--accent:linear-gradient(90deg,var(--green-1),var(--green-2));--muted:#f8fafc}
-    body{background:linear-gradient(180deg,#f8fafc,white 20%);} /* subtle base */
+    /* ----------------------
+       Background stage (modern changing backgrounds)
+       ---------------------- */
+    .bg-stage{ position:fixed; inset:0; z-index:-20; pointer-events:none; display:block; overflow:hidden }
+    .bg-stage .layer{ position:absolute; inset:0; background-size:cover; background-position:center center; opacity:0; transition:opacity 900ms cubic-bezier(.2,.9,.2,1); filter:contrast(.98) saturate(.98); }
+    .bg-stage .layer.visible{ opacity:1 }
+    @media (prefers-reduced-motion:reduce){ .bg-stage .layer{ transition:none !important } }
 
-    /* HERO */
-    .hero { position:relative; overflow:hidden; min-height:72vh; display:flex; align-items:center; }
+    /* ----------------------
+       HERO
+       ---------------------- */
+    .hero{ position:relative; min-height:72vh; display:flex; align-items:center; }
+    .hero-inner{ position:relative; z-index:10; width:100%; max-width:1200px; margin:0 auto; padding:32px; display:flex; align-items:flex-start }
 
-    /* Background image */
-    .bg-img {
-      position:absolute; inset:0;
-      background-image: url('images/20240720_120133.jpg'), url('/20240720_120133.jpg'), url('20240720_120133.jpg');
-      background-size:cover; background-position:center center;
-      transform:translate3d(0,0,0) scale(1.02);
-      filter:brightness(1) saturate(1);
-      transition:transform 1.8s cubic-bezier(.2,.9,.2,1), filter 1.2s;
-      will-change:transform;
-    }
-    .hero:hover .bg-img{ transform:translate3d(0,-4px,0) scale(1.04); }
+    /* move title panel to the side */
+    .hero-panel{ background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(250,250,250,0.88)); border-radius:12px; padding:22px; width:320px; box-shadow:0 10px 30px rgba(2,6,23,0.06); }
+    @media(max-width:900px){ .hero-inner{ padding:20px; } .hero-panel{ width:100%; } }
 
-    /* light overlay only */
-    .hero::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(3,7,18,0.02), rgba(3,7,18,0.00)); pointer-events:none; }
+    .hero-subtle{ color:var(--muted); font-weight:600; letter-spacing:0.06em }
 
-    .parallax-mid{ position:absolute; inset:0; background:transparent; transform:translate3d(0,0,0); transition:transform .9s linear; }
+    /* small CTA group */
+    .cta-row{ display:flex; gap:12px; margin-top:12px }
+    .btn{ background:var(--accent); color:white; padding:10px 14px; border-radius:8px; font-weight:600; border:none; cursor:pointer; box-shadow:0 8px 26px rgba(16,185,129,0.12) }
+    .btn-ghost{ background:rgba(255,255,255,0.9); border:1px solid rgba(14,20,24,0.06); color:var(--text) }
 
-    /* stripe accent animation */
-    .stripe-accent{ background:var(--accent); background-size:200% 100%; animation:shift 6s linear infinite; display:inline-block; }
-    @keyframes shift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    /* subtle hero caption under panel */
+    .hero-caption{ margin-left:16px; color:var(--muted); font-size:14px; margin-top:6px }
 
-    /* common card */
-    .card{transition:transform .42s cubic-bezier(.16,.88,.34,1), box-shadow .42s; transform-origin:center}
-    .card:hover{transform:translateY(-10px) scale(1.01); box-shadow:0 28px 48px rgba(2,6,23,0.08)}
+    /* ----------------------
+       Top badge simplified (eye-grabber)
+       ---------------------- */
+    .top-badge{ display:flex; align-items:center; justify-content:center; padding:28px; background:linear-gradient(90deg,#ffffff,#fafafc); border-radius:12px; box-shadow:0 12px 36px rgba(2,6,23,0.04); margin:24px auto; max-width:1100px }
+    .top-badge h2{ text-align:center; font-weight:900; color:var(--text); margin:0 }
+    .top-badge .big{ display:block; font-size:clamp(28px,6.5vw,64px); line-height:0.92; letter-spacing:-0.02em; color:var(--muted) }
+    .top-badge .accent{ color:var(--accent); }
 
-    /* Gallery improvements */
-    .gallery-item{overflow:hidden; border-radius:.5rem; background: var(--muted); display:block}
-    .gallery-item img{
-      transition:transform .5s cubic-bezier(.2,.9,.2,1), filter .45s; transform-origin:center center;
-      image-rendering: auto; backface-visibility: hidden; transform: translateZ(0);
-      will-change: transform; width:100%; height:100%; object-fit:cover;
-      filter: contrast(1.02) saturate(1.02);
-      display:block
-    }
-    .gallery-item:hover img{transform:scale(1.035) rotate(.15deg); filter:brightness(1) contrast(1.03) saturate(1.04)}
+    /* ----------------------
+       ABOUT (longer)
+       ---------------------- */
+    .section{ max-width:1100px; margin:0 auto; padding:48px 24px }
+    .section h2{ font-size:20px; font-weight:800 }
+    .section p{ color:var(--muted); margin-top:8px }
 
-    /* Enlarged gallery layout */
-    .gallery-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap:1rem }
-    @media(min-width:900px){ .gallery-grid{ grid-template-columns: repeat(3, 1fr); } }
-    .gallery-tall{ grid-row: span 2; }
-    .gallery-large{ height:420px }
+    /* ----------------------
+       REVIEWS (single visible) — arrows moved outside
+       ---------------------- */
+    .reviews-wrap{ position:relative; overflow:hidden; background:var(--card); border-radius:12px; padding:24px; box-shadow:0 10px 30px rgba(2,6,23,0.04) }
+    .reviews-track{ display:flex; transition:transform .48s cubic-bezier(.2,.9,.2,1); }
+    .review-card{ flex:0 0 100%; min-width:100%; box-sizing:border-box }
 
-    /* lightbox modal */
-    .lightbox{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(2,6,23,0.6); z-index:80; opacity:0; pointer-events:none; transition:opacity .28s ease }
-    .lightbox.visible{ opacity:1; pointer-events:auto }
-    .lightbox-content{ max-width:92vw; max-height:90vh; border-radius:12px; overflow:hidden; background:#fff; display:flex; align-items:center; justify-content:center; position:relative }
-    .lightbox-content img{ max-width:100%; max-height:100%; object-fit:contain; display:block }
-    .lightbox-close, .lightbox-prev, .lightbox-next{ position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.95); border-radius:999px; width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 24px rgba(2,6,23,0.12); border:none }
-    .lightbox-close{ right:10px; top:12px; transform:none }
-    .lightbox-prev{ left:12px }
-    .lightbox-next{ right:12px }
+    .reviews-controls{ position:absolute; top:50%; left:calc(50% + 520px); right:auto; transform:translateY(-50%); display:flex; gap:12px }
+    /* left arrow placed to the far left of the reviews block */
+    .reviews-controls .left{ position:absolute; left:-72px; top:50%; transform:translateY(-50%); }
+    .reviews-controls .right{ position:absolute; right:-72px; top:50%; transform:translateY(-50%); }
 
-    /* TOP BADGE */
-    .top-badge{ display:flex; align-items:center; justify-content:center; padding:28px; background:linear-gradient(90deg,#f0fdf4,#ecfdf5); border-radius:12px; box-shadow:0 10px 30px rgba(2,6,23,0.04)}
-    .top-badge h2{ text-align:center; font-weight:900; color:var(--green-1); margin:0 }
-    .top-badge .big{ display:block; font-size:clamp(28px,6.5vw,72px); line-height:0.92; letter-spacing:-0.02em }
-    .top-badge .sub{ display:block; font-size:clamp(14px,2.4vw,18px); color:rgba(3,7,18,0.65); margin-top:6px }
+    /* more modern arrow/button style */
+    .icon-btn{ display:inline-flex; align-items:center; justify-content:center; background:var(--bg-200); border-radius:12px; padding:10px; box-shadow:0 8px 24px rgba(2,6,23,0.06); border:none; cursor:pointer }
+    .icon-btn svg{ width:18px; height:18px }
 
-    /* REVIEWS - single card visible at a time */
-    .reviews-wrap{ max-width:980px; margin:0 auto; position:relative; overflow:hidden }
-    .reviews-track{ display:flex; transition:transform .48s cubic-bezier(.2,.9,.2,1); will-change:transform }
-    .review-card{ flex:0 0 100%; box-sizing:border-box; min-width:100%; background:white; border-radius:12px; padding:20px; box-shadow:0 8px 30px rgba(2,6,23,0.06) }
-    .review-stars{ color:var(--green-1); margin-bottom:8px }
-    .reviews-controls{ position:absolute; top:50%; transform:translateY(-50%); left:0; right:0; display:flex; justify-content:space-between; pointer-events:none; padding:0 8px }
-    .reviews-controls button{ pointer-events:auto; background:var(--muted); border-radius:999px; width:48px; height:48px; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 22px rgba(2,6,23,0.08) }
-    .reviews-controls button svg{ width:18px; height:18px; }
     .review-dots{ display:flex; gap:8px; justify-content:center; margin-top:12px }
-    .review-dot{ width:10px; height:10px; border-radius:999px; background:#d1fae5; cursor:pointer }
-    .review-dot.active{ background:var(--green-1) }
+    .review-dot{ width:10px; height:10px; border-radius:999px; background:#e6fff1; cursor:pointer }
+    .review-dot.active{ background:var(--accent) }
 
-    /* SERVICES with thumbnails */
-    .services-grid{ display:grid; grid-template-columns:1fr; gap:1rem }
+    /* ----------------------
+       SERVICES (bigger) with thumbs
+       ---------------------- */
+    .services-grid{ display:grid; grid-template-columns:1fr; gap:18px }
     @media(min-width:900px){ .services-grid{ grid-template-columns: repeat(3, 1fr); } }
-    .service-thumb{ height:160px; object-fit:cover; width:100%; border-radius:8px }
+    .service-thumb{ width:100%; height:220px; object-fit:cover; border-radius:8px }
 
-    /* arrows unified look */
-    .icon-btn{ display:inline-flex; align-items:center; justify-content:center; background:white; border-radius:10px; padding:8px; box-shadow:0 8px 24px rgba(2,6,23,0.06); border:none; cursor:pointer }
+    /* ----------------------
+       GALLERY — larger grid
+       ---------------------- */
+    .gallery-grid{ display:grid; grid-template-columns:1fr; gap:12px }
+    @media(min-width:700px){ .gallery-grid{ grid-template-columns: repeat(3, 1fr); } }
+    .gallery-large{ grid-column: span 2; height:480px }
+    .gallery-item img{ width:100%; height:100%; object-fit:cover; border-radius:8px }
+
+    /* ----------------------
+       LIGHTBOX modern controls
+       ---------------------- */
+    .lightbox{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(6,8,10,0.7); z-index:80; opacity:0; pointer-events:none; transition:opacity .28s ease }
+    .lightbox.visible{ opacity:1; pointer-events:auto }
+    .lightbox-content{ max-width:92vw; max-height:92vh; border-radius:12px; overflow:hidden; background:linear-gradient(180deg,#fff,#f8fafc); display:flex; align-items:center; justify-content:center; position:relative }
+    .lightbox-close{ position:absolute; top:8px; right:8px; background:transparent; border-radius:8px; padding:8px; border:none; cursor:pointer }
+
+    /* ----------------------
+       small helpers
+       ---------------------- */
+    .muted{ color:var(--muted) }
+    .spaced{ margin-top:18px }
 
     @media (prefers-reduced-motion:reduce){
-      .bg-img, .parallax-mid, .gallery-item img, .lightbox, .top-badge { animation:none !important; transition:none !important }
+      .bg-stage .layer, .reviews-track, .lightbox { transition:none !important }
     }
   </style>
 </head>
-<body class="antialiased text-slate-800">
-  <header class="bg-white sticky top-0 z-50 backdrop-blur-sm/5 shadow-sm">
-    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+<body>
+  <!-- Background stage: full-viewport layers that crossfade based on scroll or slideshow -->
+  <div class="bg-stage" id="bg-stage" aria-hidden="true">
+    <div class="layer" data-src="images/20240720_120133.jpg" id="bg-0"></div>
+    <div class="layer" data-src="images/20240824_122325.jpg" id="bg-1"></div>
+    <div class="layer" data-src="images/20240817_120611.jpg" id="bg-2"></div>
+    <div class="layer" data-src="images/20250524_124858.jpg" id="bg-3"></div>
+  </div>
+
+  <header class="bg-transparent sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <a href="#" class="flex items-center gap-3">
         <img src="Stripes_Logo.png" alt="Stripes Logo" class="h-12 w-auto" />
-        <span class="font-bold text-xl">Stripes Lawn Care</span>
       </a>
       <nav class="hidden md:flex gap-6 items-center text-sm">
-        <a href="#services" class="hover:text-green-600 underline-fancy">Services</a>
-        <a href="#about" class="hover:text-green-600 underline-fancy">About</a>
-        <a href="#gallery" class="hover:text-green-600 underline-fancy">Gallery</a>
-        <a href="#reviews" class="hover:text-green-600 underline-fancy">Reviews</a>
-        <a href="#contact" class="px-4 py-2 rounded-md stripe-accent text-white shadow btn-glow">Get Estimate</a>
+        <a href="#services" class="underline-fancy muted">Services</a>
+        <a href="#about" class="underline-fancy muted">About</a>
+        <a href="#gallery" class="underline-fancy muted">Gallery</a>
+        <a href="#reviews" class="underline-fancy muted">Reviews</a>
+        <a href="#contact" class="px-4 py-2 rounded-md" style="background:var(--accent);color:white">Get Estimate</a>
       </nav>
-      <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md focus:outline-none">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
+      <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md focus:outline-none bg-white/60 shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
       </button>
-    </div>
-    <div id="mobile-menu" class="md:hidden hidden px-6 pb-4">
-      <a href="#services" class="block py-2">Services</a>
-      <a href="#about" class="block py-2">About</a>
-      <a href="#gallery" class="block py-2">Gallery</a>
-      <a href="#reviews" class="block py-2">Reviews</a>
-      <a href="#contact" class="block py-2">Get Estimate</a>
     </div>
   </header>
 
   <main>
     <!-- HERO -->
-    <section class="hero" aria-label="Hero">
-      <div class="bg-img" id="bg-img" aria-hidden="true"></div>
-      <div class="parallax-mid" id="parallax-mid" aria-hidden="true"></div>
-
-      <div class="max-w-6xl mx-auto px-6 py-20">
-        <!-- simplified centered title -->
-        <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 max-w-xl mx-auto text-center reveal">
-          <h1 class="text-4xl font-extrabold tracking-tight">Stripes Lawn Care</h1>
-        </div>
+    <section class="hero" id="hero">
+      <div class="hero-inner">
+        <aside class="hero-panel">
+          <div class="hero-subtle">Locally owned • Stow, OH</div>
+          <h1 style="font-size:28px; margin-top:8px;">Stripes<br/>Lawn Care</h1>
+          <p class="muted spaced">Weekly mowing, lawn health programs, landscaping, seasonal cleanups and more. Reliable crews, respectful service.</p>
+          <div class="cta-row spaced">
+            <button class="btn">Get Estimate</button>
+            <button class="btn-ghost">Learn More</button>
+          </div>
+        </aside>
       </div>
     </section>
 
-    <!-- BIG TOP BADGE / EYEGRABBER -->
-    <section class="max-w-6xl mx-auto px-6 py-8 reveal">
+    <!-- TOP BADGE -->
+    <section class="section reveal">
       <div class="top-badge">
-        <h2>
-          <span class="big">TOP 3 LAWN CARE</span>
-          <span class="big" style="color:var(--green-2);">STOW, OH</span>
-          <span class="sub">2 YEARS</span>
-        </h2>
+        <h2><span class="big">TOP 3 LAWN CARE</span><span class="big accent"> STOW, OH</span><span class="sub">2 YEARS</span></h2>
       </div>
     </section>
 
-    <!-- ABOUT - longer content to lengthen page -->
-    <section id="about" class="max-w-6xl mx-auto px-6 py-12 reveal">
+    <!-- ABOUT -->
+    <section id="about" class="section reveal">
       <div class="grid md:grid-cols-2 gap-8 items-center">
         <div>
-          <h2 class="text-2xl font-bold">About Stripes Lawn Care</h2>
-          <p class="mt-3 text-slate-600">Family-owned and locally operated in Stow, Ohio. We provide reliable scheduling, respectful crews, and consistent results. From weekly mowing plans to full landscaping projects, we focus on long-term health and curb appeal for your property.</p>
-          <ul class="mt-4 space-y-2 text-slate-700">
-            <li>✅ Licensed & insured</li>
-            <li>✅ Free estimates</li>
-            <li>✅ Commercial and residential services</li>
-            <li>✅ Eco-friendly product options</li>
-          </ul>
+          <h2>About Stripes Lawn Care</h2>
+          <p>Family-owned and locally operated in Stow, Ohio. We focus on long-term yard health and curb appeal — from seasonal fertilizer programs to one-off landscaping upgrades.</p>
+          <p class="muted spaced">We value punctuality, clean work, and honest pricing. Serving homeowners and businesses across the area with customizable plans.</p>
         </div>
         <div>
-          <img src="images/20240817_120611.jpg" alt="About image" class="rounded-lg w-full object-cover h-72" onerror="this.onerror=null;this.src='20240817_120611.jpg'" />
+          <img src="images/20240817_120611.jpg" alt="About image" class="rounded-lg" style="width:100%; height:320px; object-fit:cover"/>
         </div>
       </div>
     </section>
 
-    <!-- REVIEWS SECTION (larger) -->
-    <section id="reviews" class="max-w-6xl mx-auto px-6 py-12 reveal">
-      <h2 class="text-2xl font-bold mb-4">Customer Reviews</h2>
-      <p class="text-slate-600 mb-6">What our customers are saying — real reviews from homeowners in Stow and nearby.</p>
+    <!-- REVIEWS (bigger, single) -->
+    <section id="reviews" class="section reveal">
+      <h2>Customer Reviews</h2>
+      <p class="muted">What our customers are saying — real reviews from homeowners in Stow and nearby.</p>
 
-      <div class="reviews-wrap">
+      <div class="spaced reviews-wrap">
         <div class="reviews-track" id="reviews-track">
           <div class="review-card">
             <div class="review-stars">★★★★★</div>
             <p class="text-slate-700">Stripes Lawn Care did an amazing job with our yard. Fast, friendly, and the lawn looks brand new. Highly recommend!</p>
-            <p class="text-sm text-slate-500 mt-3">— Jamie R., Stow, OH</p>
+            <p class="text-sm muted mt-3">— Jamie R., Stow, OH</p>
           </div>
           <div class="review-card">
             <div class="review-stars">★★★★★</div>
             <p class="text-slate-700">Reliable and professional. Showed up on schedule and the crew was respectful. Great value for the quality.</p>
-            <p class="text-sm text-slate-500 mt-3">— Marcus P., Hudson, OH</p>
+            <p class="text-sm muted mt-3">— Marcus P., Hudson, OH</p>
           </div>
           <div class="review-card">
             <div class="review-stars">★★★★★</div>
             <p class="text-slate-700">My landscaping project turned out even better than I imagined. The team had great suggestions and a flawless cleanup.</p>
-            <p class="text-sm text-slate-500 mt-3">— Linda K., Stow, OH</p>
+            <p class="text-sm muted mt-3">— Linda K., Stow, OH</p>
           </div>
         </div>
 
         <div class="reviews-controls" aria-hidden="true">
-          <button id="rev-prev" class="icon-btn" aria-label="Previous review">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
-          </button>
-          <button id="rev-next" class="icon-btn" aria-label="Next review">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
-          </button>
+          <div class="left">
+            <button id="rev-prev" class="icon-btn" aria-label="Previous review">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+            </button>
+          </div>
+          <div class="right">
+            <button id="rev-next" class="icon-btn" aria-label="Next review">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+            </button>
+          </div>
         </div>
 
         <div class="review-dots" id="review-dots" aria-hidden="true"></div>
       </div>
     </section>
 
-    <!-- SERVICES - bigger with thumbnails -->
-    <section id="services" class="max-w-6xl mx-auto px-6 py-16 reveal">
-      <h2 class="text-2xl font-bold">Our Services</h2>
-      <p class="text-slate-600 mt-2">Comprehensive care for residential and commercial properties. Click any service to learn more.</p>
-
-      <div class="services-grid mt-8">
+    <!-- SERVICES -->
+    <section id="services" class="section reveal">
+      <h2>Our Services</h2>
+      <p class="muted">Comprehensive care for residential and commercial properties.</p>
+      <div class="spaced services-grid">
         <div class="card p-4">
-          <img src="images/20240720_120133.jpg" alt="Mowing" class="service-thumb" onerror="this.onerror=null;this.src='20240720_120133.jpg'" />
+          <img src="images/20240720_120133.jpg" alt="Mowing" class="service-thumb" />
           <h3 class="mt-3 font-semibold">Mowing & Edging</h3>
-          <p class="text-sm text-slate-600">Weekly and biweekly plans to keep turf clean and healthy.</p>
+          <p class="muted">Weekly and biweekly plans to keep turf clean and healthy.</p>
         </div>
         <div class="card p-4">
-          <img src="images/20240824_122325.jpg" alt="Landscaping" class="service-thumb" onerror="this.onerror=null;this.src='20240824_122325.jpg'" />
+          <img src="images/20240824_122325.jpg" alt="Landscaping" class="service-thumb" />
           <h3 class="mt-3 font-semibold">Landscaping & Cleanups</h3>
-          <p class="text-sm text-slate-600">Planting, mulching, pruning and seasonal cleanups.</p>
+          <p class="muted">Planting, mulching, pruning and seasonal cleanups.</p>
         </div>
         <div class="card p-4">
-          <img src="images/20250524_124858.jpg" alt="Irrigation" class="service-thumb" onerror="this.onerror=null;this.src='20250524_124858.jpg'" />
+          <img src="images/20250524_124858.jpg" alt="Irrigation" class="service-thumb" />
           <h3 class="mt-3 font-semibold">Irrigation & Drainage</h3>
-          <p class="text-sm text-slate-600">Inspections, minor repairs, and recommendations to protect turf.</p>
+          <p class="muted">Inspections, minor repairs, and recommendations to protect turf.</p>
         </div>
       </div>
     </section>
 
-    <!-- LARGER GALLERY -->
-    <section id="gallery" class="max-w-6xl mx-auto px-6 py-12">
-      <h2 class="text-2xl font-bold reveal">Gallery</h2>
-      <p class="text-slate-600 mt-2 reveal">Click any image to view larger. Click outside or press Esc to close.</p>
-      <div class="mt-6 gallery-grid">
-        <div class="gallery-item gallery-large reveal"><img src="images/20240720_120133.jpg" alt="service main" onerror="this.onerror=null;this.src='20240720_120133.jpg'" data-index="0"/></div>
-        <div class="gallery-item reveal"><img src="images/20240824_122325.jpg" alt="service" onerror="this.onerror=null;this.src='20240824_122325.jpg'" data-index="1"/></div>
-        <div class="gallery-item reveal"><img src="images/20240817_120611.jpg" alt="service" onerror="this.onerror=null;this.src='20240817_120611.jpg'" data-index="2"/></div>
-        <div class="gallery-item reveal"><img src="images/20250524_124858.jpg" alt="service" onerror="this.onerror=null;this.src='20250524_124858.jpg'" data-index="3"/></div>
-        <!-- placeholder tiles to lengthen the gallery -->
-        <div class="gallery-item reveal"><img src="images/20240720_120133.jpg" alt="repeat" onerror="this.onerror=null;this.src='20240720_120133.jpg'" data-index="0"/></div>
-        <div class="gallery-item reveal"><img src="images/20240824_122325.jpg" alt="repeat" onerror="this.onerror=null;this.src='20240824_122325.jpg'" data-index="1"/></div>
+    <!-- GALLERY -->
+    <section id="gallery" class="section reveal">
+      <h2>Gallery</h2>
+      <p class="muted">Click any image to view larger.</p>
+      <div class="spaced gallery-grid">
+        <div class="gallery-item gallery-large"><img src="images/20240720_120133.jpg" alt="main" data-index="0"/></div>
+        <div class="gallery-item"><img src="images/20240824_122325.jpg" alt="item" data-index="1"/></div>
+        <div class="gallery-item"><img src="images/20240817_120611.jpg" alt="item" data-index="2"/></div>
+        <div class="gallery-item"><img src="images/20250524_124858.jpg" alt="item" data-index="3"/></div>
+        <div class="gallery-item"><img src="images/20240720_120133.jpg" alt="item" data-index="0"/></div>
+        <div class="gallery-item"><img src="images/20240824_122325.jpg" alt="item" data-index="1"/></div>
       </div>
     </section>
 
-    <!-- Contact (Formspree) -->
-    <section id="contact" class="bg-green-50 py-12">
-      <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-start">
-        <div class="reveal">
-          <h2 class="text-2xl font-bold">Get a Free Estimate</h2>
-          <p class="mt-3 text-slate-700">Fill out the form and we'll get back to you within 24–48 hours.</p>
-
-          <form id="contact-form" action="https://formspree.io/f/xkovjzjg" method="POST" class="mt-6 space-y-4">
-            <div>
-              <label class="block text-sm text-slate-700">Full name</label>
-              <input type="text" name="name" required class="mt-1 w-full rounded-md border px-3 py-2" placeholder="Jane Doe" />
-            </div>
-
-            <div>
-              <label class="block text-sm text-slate-700">Email</label>
-              <input type="email" name="email" required class="mt-1 w-full rounded-md border px-3 py-2" placeholder="you@example.com" />
-            </div>
-
-            <div>
-              <label class="block text-sm text-slate-700">Phone</label>
-              <input type="tel" name="phone" class="mt-1 w-full rounded-md border px-3 py-2" placeholder="(555) 555-5555" />
-            </div>
-
-            <div>
-              <label class="block text-sm text-slate-700">Message / service details</label>
-              <textarea name="message" rows="4" class="mt-1 w-full rounded-md border px-3 py-2" placeholder="Tell us about your property and what you'd like done"></textarea>
-            </div>
-
-            <div>
-              <input type="hidden" name="_subject" value="New estimate request — Stripes Lawn Care" />
-              <button id="form-submit" type="submit" class="px-5 py-3 rounded-md stripe-accent text-white font-medium cta-anim btn-glow">Send Request</button>
-              <p id="form-status" class="text-sm mt-2 text-slate-600" role="status" aria-live="polite"></p>
-            </div>
-          </form>
-          <p class="text-xs text-slate-500 mt-2">We use Formspree to receive messages. No spam, we promise.</p>
-        </div>
-
-        <aside class="space-y-4 reveal">
-          <div class="bg-white p-4 rounded-lg card">
-            <h3 class="font-semibold">Contact</h3>
-            <p class="text-slate-600 mt-2">Phone: <a href="tel:+15555555555" id="phone-link">(555) 555-5555</a></p>
-            <p class="text-slate-600">Email: <a href="mailto:info@example.com" id="email-link">info@example.com</a></p>
-            <p class="text-slate-600 mt-2">Serving your local area — customizable recurring maintenance plans available.</p>
-          </div>
-
-          <div class="bg-white p-4 rounded-lg card">
-            <h3 class="font-semibold">Business Hours</h3>
-            <p class="text-slate-600 mt-2">Mon – Sat: 8am – 6pm<br />Sun: Closed</p>
-          </div>
+    <!-- CONTACT -->
+    <section id="contact" class="section reveal">
+      <h2>Get a Free Estimate</h2>
+      <p class="muted">Fill out the form and we'll get back to you within 24–48 hours.</p>
+      <div class="spaced grid md:grid-cols-2 gap-8">
+        <form id="contact-form" action="https://formspree.io/f/xkovjzjg" method="POST" class="space-y-4">
+          <div><label class="block text-sm muted">Full name</label><input type="text" name="name" required class="mt-1 w-full rounded-md border px-3 py-2" /></div>
+          <div><label class="block text-sm muted">Email</label><input type="email" name="email" required class="mt-1 w-full rounded-md border px-3 py-2" /></div>
+          <div><label class="block text-sm muted">Phone</label><input type="tel" name="phone" class="mt-1 w-full rounded-md border px-3 py-2" /></div>
+          <div><label class="block text-sm muted">Message</label><textarea name="message" rows="4" class="mt-1 w-full rounded-md border px-3 py-2"></textarea></div>
+          <div><input type="hidden" name="_subject" value="New estimate request — Stripes Lawn Care" /><button id="form-submit" class="btn">Send Request</button><p id="form-status" class="muted"></p></div>
+        </form>
+        <aside>
+          <div class="card p-4"><h3 class="font-semibold">Contact</h3><p class="muted">Phone: <a href="tel:+15555555555">(555) 555-5555</a></p><p class="muted">Email: <a href="mailto:info@example.com">info@example.com</a></p></div>
+          <div class="card p-4 mt-4"><h3 class="font-semibold">Business Hours</h3><p class="muted">Mon – Sat: 8am – 6pm<br/>Sun: Closed</p></div>
         </aside>
       </div>
     </section>
-
   </main>
 
-  <footer class="bg-white border-t mt-8">
-    <div class="max-w-6xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="flex items-center gap-3">
-        <img src="Stripes_Logo.png" alt="Logo" class="h-10" />
-        <div>
-          <p class="text-sm">© <span id="year"></span> Stripes Lawn Care. All rights reserved.</p>
-        </div>
-      </div>
-      <nav class="text-sm">
-        <a href="#privacy" class="mr-4">Privacy</a>
-        <a href="#terms">Terms</a>
-      </nav>
-    </div>
-    <!-- decorative wave -->
-    <svg class="wave" viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true"><path d="M0,32 C180,96 360,0 720,40 C1080,80 1260,12 1440,48 L1440 80 L0 80 Z" fill="#ecfdf5"/></svg>
-  </footer>
+  <footer class="py-8 text-center muted">© <span id="year"></span> Stripes Lawn Care — All rights reserved.</footer>
 
-  <!-- Lightbox markup -->
+  <!-- LIGHTBOX -->
   <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true">
-    <div class="lightbox-content" role="document">
-      <button class="lightbox-close" aria-label="Close">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M6 18L18 6"/></svg>
-      </button>
-      <button class="lightbox-prev" aria-label="Previous">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
-      </button>
-      <img src="" alt="" id="lightbox-img" />
-      <button class="lightbox-next" aria-label="Next">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
-      </button>
+    <div class="lightbox-content">
+      <button class="lightbox-close" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M6 18L18 6"/></svg></button>
+      <button class="lightbox-prev icon-btn" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <img id="lightbox-img" src="" alt="" style="max-width:92vw; max-height:92vh; display:block;" />
+      <button class="lightbox-next icon-btn" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg></button>
     </div>
   </div>
 
   <script>
-    // interactive bits: mobile menu, form submit (Formspree via fetch), scroll reveal, smooth anchor scrolling with header offset, parallax, lightbox, reviews
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // mobile menu
     const btn = document.getElementById('mobile-menu-btn');
-    const menu = document.getElementById('mobile-menu');
-    btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+    const mobileMenu = document.getElementById('mobile-menu');
+    btn && btn.addEventListener('click', ()=> mobileMenu && mobileMenu.classList.toggle('hidden'));
 
-    // Smooth anchor scrolling with offset for sticky header
-    function handleAnchorClicks(){
-      const header = document.querySelector('header');
-      const headerHeight = header ? header.offsetHeight : 72;
-      document.querySelectorAll('a[href^="#"]').forEach(a=>{
-        a.addEventListener('click', function(e){
-          const targetId = this.getAttribute('href');
-          if(!targetId || targetId === '#') return;
-          const target = document.querySelector(targetId);
-          if(!target) return; // allow normal behavior
-          e.preventDefault();
-          const rect = target.getBoundingClientRect();
-          const top = window.scrollY + rect.top - headerHeight - 12; // small spacer
-          window.scrollTo({ top, behavior: 'smooth' });
-          if(!menu.classList.contains('hidden')) menu.classList.add('hidden');
+    // preload bg-stage layers and set as background-image
+    (function(){
+      const layers = Array.from(document.querySelectorAll('.bg-stage .layer'));
+      layers.forEach(l=>{ const url = l.dataset.src; l.style.backgroundImage = `url('${url}')`; });
+
+      // simple slideshow across layers when hero visible
+      let idx = 0; const total = layers.length;
+      function show(i){ layers.forEach((l,j)=> l.classList.toggle('visible', j===i)); }
+      show(0);
+      if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches){
+        setInterval(()=>{ idx = (idx+1)%total; show(idx); }, 7000);
+      }
+
+      // change stage when sections enter view for extra 'surprise' effect
+      const sects = document.querySelectorAll('main section');
+      const obs = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            const bg = e.target.dataset && e.target.dataset.bg;
+            if(bg){ layers.forEach(l=> l.classList.toggle('visible', l.dataset.src && l.dataset.src.includes(bg))); }
+          }
         });
-      });
-    }
-    handleAnchorClicks();
+      },{threshold:0.4});
+      sects.forEach(s=> obs.observe(s));
+    })();
 
-    // Form submission using fetch to Formspree to avoid redirect
+    // Formspree submit via fetch
     (function(){
       const form = document.getElementById('contact-form');
+      if(!form) return;
       const status = document.getElementById('form-status');
       const submitBtn = document.getElementById('form-submit');
       form.addEventListener('submit', async function(e){
-        e.preventDefault();
-        status.textContent = '';
-        submitBtn.disabled = true;
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Sending...';
-        const action = form.getAttribute('action');
-        const fd = new FormData(form);
-        try{
-          const res = await fetch(action, {
-            method: 'POST',
-            body: fd,
-            headers: { 'Accept': 'application/json' }
-          });
-          if(res.ok){
-            status.textContent = 'Thanks — your message was sent. We will reply shortly.';
-            status.classList.remove('text-slate-600');
-            status.classList.add('text-green-700');
-            form.reset();
-          } else {
-            const data = await res.json().catch(()=>null);
-            if(data && data.errors){
-              status.textContent = data.errors.map(e=>e.message).join(', ');
-            } else {
-              status.textContent = 'Oops — there was a problem submitting the form.';
-            }
-            status.classList.add('text-red-600');
-          }
-        }catch(err){
-          console.error(err);
-          status.textContent = 'Network error — please try again or email us directly.';
-          status.classList.add('text-red-600');
-        }
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-      });
+        e.preventDefault(); submitBtn.disabled = true; const orig = submitBtn.textContent; submitBtn.textContent = 'Sending...';
+        try{ const res = await fetch(form.action, { method:'POST', body:new FormData(form), headers:{ 'Accept':'application/json' } });
+          if(res.ok){ status.textContent = 'Thanks — we received your message.'; form.reset(); } else { const data = await res.json().catch(()=>null); status.textContent = (data && data.errors ? data.errors.map(x=>x.message).join(', ') : 'Submission error'); }
+        }catch(err){ status.textContent = 'Network error'; }
+        submitBtn.disabled = false; submitBtn.textContent = orig; });
     })();
 
-    // Scroll reveal
-    const reveals = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){ entry.target.classList.add('visible'); io.unobserve(entry.target); }
-      })
-    },{threshold:.12});
-    reveals.forEach(r=>io.observe(r));
-    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){ document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible')); }
-
-    // Parallax: gentle transforms on scroll
+    // Lightbox
     (function(){
-      const bg = document.getElementById('bg-img');
-      const mid = document.getElementById('parallax-mid');
-      let latestScroll = 0; let ticking = false;
-      function onScroll(){ latestScroll = window.scrollY; if(!ticking){ window.requestAnimationFrame(update); ticking = true; } }
-      function clamp(v,min,max){ return Math.max(min,Math.min(max,v)); }
-      function update(){ const s = latestScroll; const bgY = clamp(s * -0.03, -30, 30); bg.style.transform = `translate3d(0,${bgY}px,0) scale(1.02)`; const midY = clamp(s * -0.05, -40, 40); mid.style.transform = `translate3d(0,${midY}px,0)`; ticking = false; }
-      if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches){ window.addEventListener('scroll', onScroll, {passive:true}); }
-    })();
-
-    // LIGHTBOX functionality for gallery images (expanded, click outside to close, arrow nav)
-    (function(){
-      const images = Array.from(document.querySelectorAll('.gallery-item img'));
+      const imgs = Array.from(document.querySelectorAll('.gallery-item img'));
       const lightbox = document.getElementById('lightbox');
       const lbImg = document.getElementById('lightbox-img');
       const closeBtn = document.querySelector('.lightbox-close');
       const prevBtn = document.querySelector('.lightbox-prev');
       const nextBtn = document.querySelector('.lightbox-next');
-      let index = 0;
-
-      function openAt(i){ index = (i+images.length)%images.length; const src = images[index].src; lbImg.src = src; lightbox.classList.add('visible'); lightbox.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; }
-      function close(){ lightbox.classList.remove('visible'); lightbox.setAttribute('aria-hidden','true'); lbImg.src = ''; document.body.style.overflow = ''; }
-      function next(){ openAt(index+1); }
-      function prev(){ openAt(index-1); }
-
-      images.forEach((img,i)=> img.addEventListener('click', ()=> openAt(i)));
+      let i = 0;
+      function openAt(idx){ i = (idx + imgs.length) % imgs.length; lbImg.src = imgs[i].src; lightbox.classList.add('visible'); lightbox.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+      function close(){ lightbox.classList.remove('visible'); lightbox.setAttribute('aria-hidden','true'); lbImg.src=''; document.body.style.overflow=''; }
+      function nxt(){ openAt(i+1); }
+      function prev(){ openAt(i-1); }
+      imgs.forEach((img, idx)=> img.addEventListener('click', ()=> openAt(idx)));
       closeBtn.addEventListener('click', close);
-      nextBtn.addEventListener('click', next);
+      nextBtn.addEventListener('click', nxt);
       prevBtn.addEventListener('click', prev);
-
-      // close on overlay click
-      lightbox.addEventListener('click', function(e){ if(e.target === lightbox) close(); });
-      // keyboard navigation
-      document.addEventListener('keydown', function(e){ if(lightbox.classList.contains('visible')){
-        if(e.key === 'Escape') close();
-        if(e.key === 'ArrowRight') next();
-        if(e.key === 'ArrowLeft') prev();
-      }});
+      lightbox.addEventListener('click', (e)=> { if(e.target === lightbox) close(); });
+      document.addEventListener('keydown', (e)=>{ if(lightbox.classList.contains('visible')){ if(e.key==='Escape') close(); if(e.key==='ArrowRight') nxt(); if(e.key==='ArrowLeft') prev(); }});
     })();
 
-    // REVIEWS slider (single view, arrows placed outside so they don't cover content)
+    // Reviews carousel (single visible) with outside-spaced arrows
     (function(){
-      const track = document.getElementById('reviews-track');
-      const cards = Array.from(track.children);
-      const prev = document.getElementById('rev-prev');
-      const next = document.getElementById('rev-next');
+      const track = document.getElementById('reviews-track'); if(!track) return;
+      const cards = Array.from(track.children); const total = cards.length; let idx = 0;
       const dotsWrap = document.getElementById('review-dots');
-      let idx = 0;
-      const total = cards.length;
-
-      function renderDots(){ for(let i=0;i<total;i++){ const d = document.createElement('div'); d.className='review-dot'+(i===0?' active':''); d.dataset.i=i; d.addEventListener('click', ()=> goTo(i)); dotsWrap.appendChild(d);} }
-      function goTo(i){ idx = (i+total)%total; track.style.transform = `translateX(${ -idx * 100 }%)`; updateDots(); }
-      function nextSlide(){ goTo(idx+1); }
-      function prevSlide(){ goTo(idx-1); }
-      function updateDots(){ Array.from(dotsWrap.children).forEach((d,i)=> d.classList.toggle('active', i===idx)); }
-
+      function renderDots(){ for(let j=0;j<total;j++){ const d=document.createElement('div'); d.className='review-dot'+(j===0?' active':''); d.dataset.i=j; d.addEventListener('click', ()=> goTo(j)); dotsWrap.appendChild(d); } }
+      function goTo(n){ idx=(n+total)%total; track.style.transform = `translateX(${ -idx * 100 }%)`; Array.from(dotsWrap.children).forEach((d,i)=> d.classList.toggle('active', i===idx)); }
       renderDots();
-      next.addEventListener('click', nextSlide);
-      prev.addEventListener('click', prevSlide);
-
-      // autoplay
-      let autoplay = setInterval(nextSlide, 6000);
-      const wrap = document.querySelector('.reviews-wrap');
-      wrap.addEventListener('mouseenter', ()=> clearInterval(autoplay));
-      wrap.addEventListener('mouseleave', ()=> autoplay = setInterval(nextSlide, 6000));
-
-      // keep correct position on resize
+      document.getElementById('rev-next').addEventListener('click', ()=> goTo(idx+1));
+      document.getElementById('rev-prev').addEventListener('click', ()=> goTo(idx-1));
+      let autoplay = setInterval(()=> goTo(idx+1), 6000);
+      const wrap = document.querySelector('.reviews-wrap'); wrap.addEventListener('mouseenter', ()=> clearInterval(autoplay)); wrap.addEventListener('mouseleave', ()=> autoplay = setInterval(()=> goTo(idx+1), 6000));
       window.addEventListener('resize', ()=> goTo(idx));
     })();
+
+    // Reveal on scroll (simple)
+    (function(){ const els = document.querySelectorAll('.reveal'); const io = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }); }, {threshold:.12}); els.forEach(el=> io.observe(el)); if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) els.forEach(el=> el.classList.add('visible')); })();
 
   </script>
 </body>
