@@ -37,7 +37,7 @@
       align-items:center;
     }
 
-    /* Background image with modern overlay */
+    /* Background image - bright and clear */
     .bg-img {
       position:absolute; 
       inset:0;
@@ -45,21 +45,21 @@
       background-size:cover; 
       background-position:center center;
       transform:translate3d(0,0,0) scale(1.05);
-      filter:brightness(0.7) saturate(1.1);
+      filter:brightness(1) saturate(1.1);
       transition:transform 2.5s cubic-bezier(.2,.9,.2,1), filter 1.5s;
       will-change:transform;
     }
     .hero:hover .bg-img{ 
       transform:translate3d(0,-6px,0) scale(1.08); 
-      filter:brightness(0.75) saturate(1.15);
+      filter:brightness(1.05) saturate(1.15);
     }
 
-    /* Modern dark overlay gradient */
+    /* Subtle vignette only at edges */
     .hero::after{ 
       content:''; 
       position:absolute; 
       inset:0; 
-      background:linear-gradient(135deg, rgba(22,163,74,0.15), rgba(0,0,0,0.6)); 
+      background:radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.3) 100%); 
       pointer-events:none; 
     }
 
@@ -295,12 +295,18 @@
       position:absolute; 
       top:50%; 
       transform:translateY(-50%); 
-      left:0; 
-      right:0; 
+      left:-70px; 
+      right:-70px; 
       display:flex; 
       justify-content:space-between; 
       pointer-events:none; 
-      padding:0 8px;
+      padding:0;
+    }
+    @media(max-width:1200px){ 
+      .reviews-controls{ left:-20px; right:-20px; }
+    }
+    @media(max-width:768px){ 
+      .reviews-controls{ left:0; right:0; padding:0 8px; }
     }
     .reviews-controls button{ 
       pointer-events:auto; 
@@ -406,11 +412,13 @@
       color: var(--text-secondary);
     }
 
-    /* Hero text positioning - moved to left side */
+    /* Hero text positioning - bottom left */
     .hero-content {
       position: relative;
       z-index: 10;
       max-width: 600px;
+      align-self: flex-end;
+      margin-bottom: 60px;
     }
     
     .hero-title-card {
@@ -448,8 +456,74 @@
       fill: rgba(16,185,129,0.1);
     }
 
+    /* GRASS AND MOWER ANIMATION */
+    .grass-section {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      z-index: 15;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    
+    .grass-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+    }
+    
+    .grass-blade {
+      width: 3px;
+      background: linear-gradient(to top, #16a34a, #22c55e);
+      transform-origin: bottom center;
+      transition: height 0.3s ease, opacity 0.3s ease;
+      border-radius: 3px 3px 0 0;
+      opacity: 1;
+    }
+    
+    .grass-blade.mowed {
+      height: 5px !important;
+      opacity: 0.3;
+    }
+    
+    .grass-blade:nth-child(odd) {
+      height: 35px;
+    }
+    
+    .grass-blade:nth-child(even) {
+      height: 28px;
+    }
+    
+    .grass-blade:nth-child(3n) {
+      height: 32px;
+    }
+    
+    .mower {
+      position: absolute;
+      bottom: 8px;
+      left: -150px;
+      width: 120px;
+      height: 80px;
+      transition: left 0.1s linear;
+      z-index: 20;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    }
+    
+    .mower img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
     @media (prefers-reduced-motion:reduce){
-      .bg-img, .parallax-mid, .gallery-item img, .lightbox, .top-badge { 
+      .bg-img, .parallax-mid, .gallery-item img, .lightbox, .top-badge, .grass-blade, .mower { 
         animation:none !important; 
         transition:none !important;
       }
@@ -502,6 +576,38 @@
               Get Free Estimate
             </a>
           </div>
+        </div>
+      </div>
+
+      <!-- Grass and Mower Animation -->
+      <div class="grass-section">
+        <div class="grass-container" id="grass-container"></div>
+        <div class="mower" id="mower">
+          <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+            <!-- Zero-turn mower illustration -->
+            <!-- Mower body -->
+            <rect x="30" y="30" width="60" height="35" fill="#ef4444" rx="4"/>
+            <!-- Seat -->
+            <rect x="45" y="20" width="30" height="15" fill="#374151" rx="3"/>
+            <!-- Steering levers -->
+            <rect x="40" y="25" width="4" height="20" fill="#1f2937" rx="1"/>
+            <rect x="76" y="25" width="4" height="20" fill="#1f2937" rx="1"/>
+            <!-- Deck -->
+            <ellipse cx="60" cy="65" rx="45" ry="10" fill="#374151"/>
+            <!-- Front wheels -->
+            <circle cx="35" cy="68" r="8" fill="#1f2937"/>
+            <circle cx="35" cy="68" r="5" fill="#6b7280"/>
+            <circle cx="85" cy="68" r="8" fill="#1f2937"/>
+            <circle cx="85" cy="68" r="5" fill="#6b7280"/>
+            <!-- Back wheels (larger) -->
+            <circle cx="30" cy="50" r="10" fill="#1f2937"/>
+            <circle cx="30" cy="50" r="6" fill="#6b7280"/>
+            <circle cx="90" cy="50" r="10" fill="#1f2937"/>
+            <circle cx="90" cy="50" r="6" fill="#6b7280"/>
+            <!-- Details -->
+            <rect x="55" y="35" width="10" height="8" fill="#fbbf24" rx="1"/>
+            <circle cx="50" cy="55" r="2" fill="#10b981"/>
+          </svg>
         </div>
       </div>
     </section>
@@ -664,7 +770,7 @@
           <div class="card p-6">
             <h3 class="font-semibold text-white text-lg mb-3">Contact</h3>
             <p class="text-gray-300 mb-2">Phone: <a href="tel:+15555555555" id="phone-link" class="text-green-400 hover:text-green-300">(555) 555-5555</a></p>
-            <p class="text-gray-300 mb-3">Email: <a href="mailto:info@example.com" id="email-link" class="text-green-400 hover:text-green-300">info@example.com</a></p>
+            <p class="text-gray-300 mb-3">Email: <a href="/cdn-cgi/l/email-protection#a4cdcac2cbe4c1dcc5c9d4c8c18ac7cbc9" id="email-link" class="text-green-400 hover:text-green-300"><span class="__cf_email__" data-cfemail="adc4c3cbc2edc8d5ccc0ddc1c883cec2c0">[email&#160;protected]</span></a></p>
             <p class="text-gray-400 text-sm">Serving your local area — customizable recurring maintenance plans available.</p>
           </div>
 
@@ -711,7 +817,7 @@
     </div>
   </div>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // interactive bits: mobile menu, form submit (Formspree via fetch), scroll reveal, smooth anchor scrolling with header offset, parallax, lightbox, reviews
     document.getElementById('year').textContent = new Date().getFullYear();
     const btn = document.getElementById('mobile-menu-btn');
@@ -824,6 +930,73 @@
       }
     })();
 
+    // GRASS AND MOWER ANIMATION
+    (function(){
+      const container = document.getElementById('grass-container');
+      const mower = document.getElementById('mower');
+      const grassCount = 80; // Number of grass blades
+      const grassBlades = [];
+
+      // Create grass blades
+      for(let i = 0; i < grassCount; i++){
+        const blade = document.createElement('div');
+        blade.className = 'grass-blade';
+        container.appendChild(blade);
+        grassBlades.push(blade);
+      }
+
+      let scrollTicking = false;
+      let lastScroll = 0;
+
+      function updateMowerAndGrass(){
+        const scroll = window.scrollY;
+        const maxScroll = 500; // Maximum scroll distance for full animation
+        const scrollPercent = Math.min(scroll / maxScroll, 1);
+        
+        // Calculate mower position (moves from left to right across screen)
+        const screenWidth = window.innerWidth;
+        const mowerStartPos = -150;
+        const mowerEndPos = screenWidth + 50;
+        const mowerPosition = mowerStartPos + (scrollPercent * (mowerEndPos - mowerStartPos));
+        
+        // Only show mower when scrolling
+        if(scroll > 10 && scroll < maxScroll + 100){
+          mower.style.left = mowerPosition + 'px';
+          mower.style.opacity = '1';
+        } else {
+          mower.style.opacity = '0';
+        }
+
+        // Mow grass as mower passes over
+        grassBlades.forEach((blade, index) => {
+          const bladePosition = (index / grassCount) * screenWidth;
+          
+          // Check if mower has passed this blade
+          if(mowerPosition > bladePosition - 60 && scroll > 10){
+            blade.classList.add('mowed');
+          } else {
+            blade.classList.remove('mowed');
+          }
+        });
+
+        lastScroll = scroll;
+        scrollTicking = false;
+      }
+
+      function onMowerScroll(){
+        if(!scrollTicking){
+          window.requestAnimationFrame(updateMowerAndGrass);
+          scrollTicking = true;
+        }
+      }
+
+      if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches){
+        window.addEventListener('scroll', onMowerScroll, {passive: true});
+        // Initial update
+        updateMowerAndGrass();
+      }
+    })();
+
     // LIGHTBOX functionality for gallery images
     (function(){
       const images = Array.from(document.querySelectorAll('.gallery-item img'));
@@ -905,12 +1078,4 @@
 
       let autoplay = setInterval(nextSlide, 6000);
       const wrap = document.querySelector('.reviews-wrap');
-      wrap.addEventListener('mouseenter', ()=> clearInterval(autoplay));
-      wrap.addEventListener('mouseleave', ()=> autoplay = setInterval(nextSlide, 6000));
-
-      window.addEventListener('resize', ()=> goTo(idx));
-    })();
-
-  </script>
-</body>
-</html>
+      wrap.addEventLis
