@@ -8,59 +8,67 @@
   <!-- Tailwind CDN for quick prototyping -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* --- Custom styles & animations --- */
-    :root{--green-1:#16a34a;--green-2:#10b981;--accent:linear-gradient(90deg,var(--green-1),var(--green-2));}
+    /* smoother site-wide scroll for modern browsers */
+    html { scroll-behavior: smooth; }
 
+    /* --- Custom styles & smoother animations --- */
+    :root{--green-1:#16a34a;--green-2:#10b981;--accent:linear-gradient(90deg,var(--green-1),var(--green-2));}
     body{background:linear-gradient(180deg,#f8fafc,white 20%);} /* subtle base */
 
-    /* Hero background and parallax layers */
-    .hero {
-      position:relative; overflow:hidden;
-      min-height:66vh;
-      display:flex; align-items:center;
-      background:linear-gradient(180deg, rgba(6,95,70,0.06), rgba(16,185,129,0.02));
+    /* Hero with layered parallax and smooth transitions; background has multiple fallbacks */
+    .hero { position:relative; overflow:hidden; min-height:72vh; display:flex; align-items:center; }
+
+    /* Background base image (main landing photo) - multiple URL fallbacks so it still loads if files sit at repo root */
+    .bg-img {
+      position:absolute; inset:0;
+      background-image: url('images/20240720_120133.jpg'), url('/20240720_120133.jpg'), url('20240720_120133.jpg');
+      background-size:cover; background-position:center center;
+      transform:translate3d(0,0,0) scale(1.06);
+      filter:brightness(.50) saturate(.98);
+      transition:transform 1.6s cubic-bezier(.2,.9,.2,1), filter 1.2s;
+      will-change:transform;
     }
-    .hero .bg-img { position:absolute; inset:0; background-image:url('20240720_120133.jpg'); background-size:cover; background-position:center; transform:scale(1.06); filter:brightness(.55); transition:transform 12s linear; }
-    .hero:hover .bg-img{ transform:scale(1.1) translateY(-6px); }
+    .hero:hover .bg-img{ transform:translate3d(0,-6px,0) scale(1.09); filter:brightness(.56) saturate(1); }
+
+    /* gentle overlay gradient to keep text legible */
+    .hero::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(3,7,18,0.18), rgba(3,7,18,0.04)); pointer-events:none; }
+
+    /* parallax mid layer for subtle motion (a blurred grass texture or color) */
+    .parallax-mid{ position:absolute; inset:0; background:radial-gradient(ellipse at 20% 10%, rgba(16,185,129,0.04), transparent 20%), radial-gradient(ellipse at 80% 80%, rgba(6,95,70,0.02), transparent 20%); transform:translate3d(0,0,0); transition:transform .9s linear; }
 
     /* animated stripe accent */
-    .stripe-accent{
-      background:var(--accent);
-      background-size:200% 100%;
-      animation:shift 6s linear infinite;
-      display:inline-block;
-    }
+    .stripe-accent{ background:var(--accent); background-size:200% 100%; animation:shift 6s linear infinite; display:inline-block; }
     @keyframes shift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-    /* floating leaf elements */
-    .float-leaf{position:absolute; opacity:.85; filter:drop-shadow(0 8px 18px rgba(2,6,23,0.12));}
+    /* floating leaf elements with smoother easing */
+    .float-leaf{position:absolute; opacity:.95; filter:drop-shadow(0 12px 24px rgba(2,6,23,0.12)); will-change:transform}
     @keyframes floaty{0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(6deg)}100%{transform:translateY(0) rotate(0deg)}}
-    .leaf-1{left:6%; top:14%; animation:floaty 6s ease-in-out infinite; width:90px}
-    .leaf-2{right:8%; top:22%; animation:floaty 7s ease-in-out .6s infinite; width:68px}
-    .leaf-3{left:calc(50% - 40px); bottom:6%; animation:floaty 9s ease-in-out .2s infinite; width:56px}
+    .leaf-1{left:6%; top:14%; animation:floaty 6.8s cubic-bezier(.2,.9,.2,1) infinite; width:96px}
+    .leaf-2{right:8%; top:22%; animation:floaty 7.4s cubic-bezier(.25,.9,.25,1) .6s infinite; width:72px}
+    .leaf-3{left:calc(50% - 40px); bottom:6%; animation:floaty 9.2s cubic-bezier(.2,.9,.2,1) .2s infinite; width:60px}
 
-    /* service cards hover */
-    .card{transition:transform .32s cubic-bezier(.2,.9,.2,1), box-shadow .32s; transform-origin:center}
-    .card:hover{transform:translateY(-8px) scale(1.02); box-shadow:0 24px 48px rgba(2,6,23,0.12)}
-    .card:active{transform:translateY(-4px) scale(.998)}
+    /* service cards hover smoothing */
+    .card{transition:transform .42s cubic-bezier(.16,.88,.34,1), box-shadow .42s; transform-origin:center}
+    .card:hover{transform:translateY(-10px) scale(1.025); box-shadow:0 32px 64px rgba(2,6,23,0.12)}
+    .card:active{transform:translateY(-6px) scale(1.01)}
 
-    /* subtle icon pop on hover */
-    .icon-wrap svg{transition:transform .28s ease, color .28s}
-    .card:hover .icon-wrap svg{transform:rotate(-6deg) scale(1.06)}
+    /* icon pop */
+    .icon-wrap svg{transition:transform .36s cubic-bezier(.2,.9,.2,1), color .36s}
+    .card:hover .icon-wrap svg{transform:rotate(-6deg) scale(1.08)}
 
     /* gallery hover */
     .gallery-item{overflow:hidden; border-radius:.75rem}
-    .gallery-item img{transition:transform .6s cubic-bezier(.2,.9,.2,1), filter .6s}
-    .gallery-item:hover img{transform:scale(1.12) rotate(.5deg); filter:brightness(.96)}
+    .gallery-item img{transition:transform .9s cubic-bezier(.2,.9,.2,1), filter .9s; transform-origin:center center}
+    .gallery-item:hover img{transform:scale(1.16) rotate(.5deg); filter:brightness(.98)}
 
     /* animated CTA button */
     .cta-anim{position:relative; overflow:hidden}
-    .cta-anim::before{content:''; position:absolute; inset:0; background:linear-gradient(120deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); mix-blend-mode:overlay; pointer-events:none;}
-    .btn-glow{box-shadow:0 6px 30px rgba(16,185,129,0.14); transition:transform .18s ease, box-shadow .18s}
-    .btn-glow:hover{transform:translateY(-3px); box-shadow:0 18px 46px rgba(16,185,129,0.18)}
+    .cta-anim::before{content:''; position:absolute; inset:0; background:linear-gradient(120deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); mix-blend-mode:overlay; pointer-events:none}
+    .btn-glow{box-shadow:0 8px 34px rgba(16,185,129,0.12); transition:transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .22s}
+    .btn-glow:hover{transform:translateY(-4px); box-shadow:0 20px 56px rgba(16,185,129,0.18)}
 
     /* scroll reveal */
-    .reveal{opacity:0; transform:translateY(18px) scale(.995); transition:all .7s cubic-bezier(.2,.9,.2,1)}
+    .reveal{opacity:0; transform:translateY(18px) scale(.995); transition:all .82s cubic-bezier(.16,.88,.34,1)}
     .reveal.visible{opacity:1; transform:none}
 
     /* tiny animated underline for links */
@@ -72,7 +80,7 @@
     .wave{display:block}
 
     @media (prefers-reduced-motion:reduce){
-      .hero .bg-img, .leaf-1, .leaf-2, .leaf-3, .stripe-accent, .gallery-item img { animation: none !important; transition:none !important}
+      .hero .bg-img, .parallax-mid, .leaf-1, .leaf-2, .leaf-3, .stripe-accent, .gallery-item img { animation: none !important; transition:none !important}
     }
   </style>
 </head>
@@ -104,16 +112,18 @@
   </header>
 
   <main>
-    <!-- Hero with animated background and floating leaves -->
+    <!-- Hero with layered parallax and floating leaves -->
     <section class="hero" aria-label="Hero">
-      <div class="bg-img" aria-hidden="true"></div>
-      <!-- decorative floating leaves (SVG placeholders) -->
-      <svg class="float-leaf leaf-1" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="url(#g)" d="M32 2c7 1 20 8 27 24-10 4-23 12-27 36-6-22-21-30-27-36C12 10 25 3 32 2z"/></svg>
-      <svg class="float-leaf leaf-2" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#10b981" d="M12 10c5 6 18 15 30 8 0 10-2 20-12 28-6-10-18-18-18-36z"/></svg>
-      <svg class="float-leaf leaf-3" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#34d399" d="M20 4c6 8 16 18 28 22-6 10-12 18-26 30-6-16-12-36-2-52z"/></svg>
+      <div class="bg-img" id="bg-img" aria-hidden="true"></div>
+      <div class="parallax-mid" id="parallax-mid" aria-hidden="true"></div>
 
-      <div class="max-w-6xl mx-auto px-6 py-16">
-        <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 max-w-2xl card reveal">
+      <!-- decorative floating leaves (SVG placeholders) -->
+      <svg class="float-leaf leaf-1" id="leaf1" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="g1" x1="0%" x2="100%"><stop offset="0%" stop-color="#16a34a"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs><path fill="url(#g1)" d="M32 2c7 1 20 8 27 24-10 4-23 12-27 36-6-22-21-30-27-36C12 10 25 3 32 2z"/></svg>
+      <svg class="float-leaf leaf-2" id="leaf2" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#10b981" d="M12 10c5 6 18 15 30 8 0 10-2 20-12 28-6-10-18-18-18-36z"/></svg>
+      <svg class="float-leaf leaf-3" id="leaf3" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#34d399" d="M20 4c6 8 16 18 28 22-6 10-12 18-26 30-6-16-12-36-2-52z"/></svg>
+
+      <div class="max-w-6xl mx-auto px-6 py-20">
+        <div class="bg-white/85 backdrop-blur-sm rounded-2xl p-8 max-w-2xl card reveal">
           <h1 class="text-3xl md:text-4xl font-extrabold">Beautiful lawns. Reliable service.</h1>
           <p class="mt-3 text-slate-700">Local, dependable lawn care and landscaping — seasonal maintenance, one-time cleanups, and custom yard makeovers.</p>
           <div class="mt-6 flex gap-3">
@@ -124,13 +134,12 @@
       </div>
     </section>
 
-    <!-- Services with icon animation and hover effects -->
+    <!-- Services -->
     <section id="services" class="max-w-6xl mx-auto px-6 py-16">
       <h2 class="text-2xl font-bold reveal">Our Services</h2>
       <p class="text-slate-600 mt-2 reveal">Comprehensive care for residential and commercial properties.</p>
 
       <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- card example with icon pop -->
         <article class="p-6 rounded-lg card reveal">
           <div class="flex items-start gap-4">
             <div class="icon-wrap p-3 rounded-md bg-white/60 shadow-sm">
@@ -218,31 +227,32 @@
           </ul>
         </div>
         <div class="reveal">
-          <img src="images/about.jpg" alt="About image" class="rounded-lg w-full object-cover h-64" />
+          <img src="images/20240817_120611.jpg" alt="About image" class="rounded-lg w-full object-cover h-64" onerror="this.onerror=null;this.src='20240817_120611.jpg'" />
         </div>
       </div>
     </section>
 
-    <!-- Gallery with hover zoom and subtle staggered reveal -->
+    <!-- Gallery with hover zoom and smooth staggered reveal -->
     <section id="gallery" class="max-w-6xl mx-auto px-6 py-12">
       <h2 class="text-2xl font-bold reveal">Gallery</h2>
-      <p class="text-slate-600 mt-2 reveal">Recent jobs — replace these with your photos in the <code>images/</code> folder.</p>
+      <p class="text-slate-600 mt-2 reveal">Recent jobs — your images are used from the <code>images/</code> folder (falls back to repo root if needed).</p>
       <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="gallery-item reveal"><img src="images/service1.jpg" alt="service" class="rounded-lg object-cover h-40 w-full" /></div>
-        <div class="gallery-item reveal" style="transition-delay:.08s"><img src="images/service2.jpg" alt="service" class="rounded-lg object-cover h-40 w-full" /></div>
-        <div class="gallery-item reveal" style="transition-delay:.16s"><img src="images/service3.jpg" alt="service" class="rounded-lg object-cover h-40 w-full" /></div>
-        <div class="gallery-item reveal" style="transition-delay:.24s"><img src="images/service4.jpg" alt="service" class="rounded-lg object-cover h-40 w-full" /></div>
+        <div class="gallery-item reveal"><img src="images/20240720_120133.jpg" alt="service main" class="rounded-lg object-cover h-40 w-full" onerror="this.onerror=null;this.src='20240720_120133.jpg'" /></div>
+        <div class="gallery-item reveal" style="transition-delay:.08s"><img src="images/20240824_122325.jpg" alt="service" class="rounded-lg object-cover h-40 w-full" onerror="this.onerror=null;this.src='20240824_122325.jpg'" /></div>
+        <div class="gallery-item reveal" style="transition-delay:.16s"><img src="images/20240817_120611.jpg" alt="service" class="rounded-lg object-cover h-40 w-full" onerror="this.onerror=null;this.src='20240817_120611.jpg'" /></div>
+        <div class="gallery-item reveal" style="transition-delay:.24s"><img src="images/20250524_124858.jpg" alt="service" class="rounded-lg object-cover h-40 w-full" onerror="this.onerror=null;this.src='20250524_124858.jpg'" /></div>
       </div>
     </section>
 
-    <!-- Contact -->
+    <!-- Contact (wired to Formspree) -->
     <section id="contact" class="bg-green-50 py-12">
       <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-start">
         <div class="reveal">
           <h2 class="text-2xl font-bold">Get a Free Estimate</h2>
           <p class="mt-3 text-slate-700">Fill out the form and we'll get back to you within 24–48 hours.</p>
 
-          <form id="contact-form" class="mt-6 space-y-4">
+          <!-- Formspree form: action points to your endpoint; we submit with fetch to avoid page reload -->
+          <form id="contact-form" action="https://formspree.io/f/xkovjzjg" method="POST" class="mt-6 space-y-4">
             <div>
               <label class="block text-sm text-slate-700">Full name</label>
               <input type="text" name="name" required class="mt-1 w-full rounded-md border px-3 py-2" placeholder="Jane Doe" />
@@ -264,11 +274,12 @@
             </div>
 
             <div>
-              <!-- NOTE: Replace the action below with your form endpoint (Formspree, Netlify Forms, etc.) -->
-              <button type="submit" class="px-5 py-3 rounded-md stripe-accent text-white font-medium cta-anim btn-glow">Send Request</button>
-              <p id="form-status" class="text-sm mt-2 text-slate-600"></p>
+              <input type="hidden" name="_subject" value="New estimate request — Stripes Lawn Care" />
+              <button id="form-submit" type="submit" class="px-5 py-3 rounded-md stripe-accent text-white font-medium cta-anim btn-glow">Send Request</button>
+              <p id="form-status" class="text-sm mt-2 text-slate-600" role="status" aria-live="polite"></p>
             </div>
           </form>
+          <p class="text-xs text-slate-500 mt-2">We use Formspree to receive messages. No spam, we promise.</p>
         </div>
 
         <aside class="space-y-4 reveal">
@@ -307,21 +318,77 @@
   </footer>
 
   <script>
-    // small interactive bits
+    // interactive bits: mobile menu, form submit (Formspree via fetch), scroll reveal, smooth anchor scrolling with header offset, and parallax
     document.getElementById('year').textContent = new Date().getFullYear();
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');
     btn.addEventListener('click', () => menu.classList.toggle('hidden'));
 
-    // Simple form handler: prevents actual submit and shows a friendly message.
-    document.getElementById('contact-form').addEventListener('submit', function(e){
-      e.preventDefault();
-      const status = document.getElementById('form-status');
-      status.textContent = 'Thanks! Your request was captured locally — replace this handler with a real form endpoint.';
-      status.classList.add('text-green-700');
-    });
+    // Smooth anchor scrolling with offset for sticky header
+    function handleAnchorClicks(){
+      const header = document.querySelector('header');
+      const headerHeight = header ? header.offsetHeight : 72;
+      document.querySelectorAll('a[href^="#"]').forEach(a=>{
+        a.addEventListener('click', function(e){
+          const targetId = this.getAttribute('href');
+          if(!targetId || targetId === '#') return;
+          const target = document.querySelector(targetId);
+          if(!target) return; // allow normal behavior
+          e.preventDefault();
+          const rect = target.getBoundingClientRect();
+          const top = window.scrollY + rect.top - headerHeight - 12; // small spacer
+          window.scrollTo({ top, behavior: 'smooth' });
+          // close mobile menu if open
+          if(!menu.classList.contains('hidden')) menu.classList.add('hidden');
+        });
+      });
+    }
+    handleAnchorClicks();
 
-    // Scroll reveal using IntersectionObserver
+    // Form submission using fetch to Formspree to avoid redirect
+    (function(){
+      const form = document.getElementById('contact-form');
+      const status = document.getElementById('form-status');
+      const submitBtn = document.getElementById('form-submit');
+      form.addEventListener('submit', async function(e){
+        e.preventDefault();
+        status.textContent = '';
+        submitBtn.disabled = true;
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Sending...';
+        const action = form.getAttribute('action');
+        const fd = new FormData(form);
+        try{
+          const res = await fetch(action, {
+            method: 'POST',
+            body: fd,
+            headers: { 'Accept': 'application/json' }
+          });
+          if(res.ok){
+            status.textContent = 'Thanks — your message was sent. We will reply shortly.';
+            status.classList.remove('text-slate-600');
+            status.classList.add('text-green-700');
+            form.reset();
+          } else {
+            const data = await res.json().catch(()=>null);
+            if(data && data.errors){
+              status.textContent = data.errors.map(e=>e.message).join(', ');
+            } else {
+              status.textContent = 'Oops — there was a problem submitting the form.';
+            }
+            status.classList.add('text-red-600');
+          }
+        }catch(err){
+          console.error(err);
+          status.textContent = 'Network error — please try again or email us directly.';
+          status.classList.add('text-red-600');
+        }
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      });
+    })();
+
+    // Scroll reveal
     const reveals = document.querySelectorAll('.reveal');
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(entry=>{
@@ -329,11 +396,38 @@
       })
     },{threshold:.12});
     reveals.forEach(r=>io.observe(r));
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){ document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible')); }
 
-    // Respect prefers-reduced-motion
-    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){
-      document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
-    }
+    // Parallax: smooth, low-cost transform on scroll using requestAnimationFrame
+    (function(){
+      const bg = document.getElementById('bg-img');
+      const mid = document.getElementById('parallax-mid');
+      const leaf1 = document.getElementById('leaf1');
+      const leaf2 = document.getElementById('leaf2');
+      const leaf3 = document.getElementById('leaf3');
+      let latestScroll = 0; let ticking = false;
+
+      function onScroll(){ latestScroll = window.scrollY; if(!ticking){ window.requestAnimationFrame(update); ticking = true; } }
+      function clamp(v,min,max){ return Math.max(min,Math.min(max,v)); }
+
+      function update(){
+        const s = latestScroll;
+        // background moves slowly (parallax feel)
+        const bgY = clamp(s * -0.08, -40, 40);
+        bg.style.transform = `translate3d(0,${bgY}px,0) scale(1.06)`;
+        // mid layer moves slightly more
+        const midY = clamp(s * -0.12, -60, 60);
+        mid.style.transform = `translate3d(0,${midY}px,0)`;
+        // leaves drift at different speeds
+        leaf1.style.transform = `translate3d(${clamp(s * 0.02, -14, 14)}px, ${Math.sin(s*0.002)*6}px, 0) rotate(${Math.sin(s*0.0014)*5}deg)`;
+        leaf2.style.transform = `translate3d(${clamp(s * -0.015, -12, 12)}px, ${Math.cos(s*0.0016)*6}px, 0) rotate(${Math.cos(s*0.0012)*4}deg)`;
+        leaf3.style.transform = `translate3d(${clamp(s * 0.01, -10, 10)}px, ${Math.sin(s*0.0019)*6}px, 0) rotate(${Math.sin(s*0.0011)*3}deg)`;
+        ticking = false;
+      }
+
+      if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches){ window.addEventListener('scroll', onScroll, {passive:true}); }
+    })();
+
   </script>
 </body>
 </html>
